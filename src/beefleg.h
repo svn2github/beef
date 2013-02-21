@@ -1034,12 +1034,12 @@ static double beefmat[] = {
 }
 
 #define calcNleg(n,x) { \
-    for(int i=2;i<n;i++) \
+    for(int i=2;i<n+1;i++) \
 	L[i] = 2.*(x)*L[i-1] - L[i-2] - ((x)*L[i-1] - L[i-2])/((double) i); \
 }
 
 #define calcNlegdleg(n,x) { \
-    for(int i=2;i<n;i++) { \
+    for(int i=2;i<n+1;i++) { \
 	L[i] = 2.*(x)*L[i-1] - L[i-2] - ((x)*L[i-1] - L[i-2])/((double) i); \
 	dL[i] = L[i-1]*i + dL[i-1]*(x); \
     } \

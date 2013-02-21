@@ -48,7 +48,7 @@ void beefx_(double *r, double *g, double *e, double *dr, double *dg, int *addlda
 
 	dfx = dl*( 4.*s / (4.+s2) - 4.*s2*s/pow((4.+s2), 2) );
 	*dr = dx*fx - 4./3.*s2/(s*(*r))*sx*dfx;
-	*dg = sx*dfx*pix/s/r83;
+	*dg = sx*dfx*pix/(s*r83);
 	*e = sx*fx;
     }
     else
@@ -305,28 +305,24 @@ void beefrandinitdef_()
 }
 
 // calculate ensemble energies
-void beefensemble_(double *beefx, double *ldac, double *pbec, double *ensemble)
+void beefensemble_(double *beefxc, double *ensemble)
 {
-    double beefvec[nmax+2],vec[nmax+2],randvec[nmax+1];
+    double vec[nmax+2],randvec[nmax+1];
     const double alpha=1.;
     const double beta=0.;
     const int m=nmax+1;
     const int n=nmax+1;
-    const int la=nmax*1;
+    const int la=nmax+1;
     const int ix=1;
     const int iy=1;
     const int n2=nmax+2;
-    
-    memcpy(beefvec, beefx, nmax*sizeof(double));
-    beefvec[nmax] = *ldac;
-    beefvec[nmax+1] = *pbec;
-    
+
     for(int i=0;i<nsamples;i++)
     {
 	for(int j=0;j<nmax+1;j++) randvec[j] = normrand();
 	dgemv_("T", &m, &n, &alpha, beefmat, &la, randvec, &ix,
 	    &beta, vec, &iy);
 	vec[nmax+1] = -vec[nmax];
-	ensemble[i] = ddot_(&n2, vec, &ix, beefvec, &iy);
+	ensemble[i] = ddot_(&n2, vec, &ix, beefxc, &iy);
     }
 }

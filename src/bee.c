@@ -5,6 +5,7 @@
 
 #define nbuf 65536
 
+
 void fileerror(const char *filename, FILE *file)
 {
     fclose(file);
@@ -17,6 +18,32 @@ void openerror(const char *filename)
     fprintf(stderr, "error opening file %s\n", filename);
     exit(3);
 }
+
+FILE *openandfindlastbeefens(const char *filename, char *buf)
+{
+    FILE *f;
+    unsigned long int u,lastu;
+    
+    f = fopen(filename, "r");
+    if(!f) openerror(filename);
+    
+    u = 1;
+    while(fgets(buf,nbuf,f) && !strstr(buf,"BEEFens")) u++;
+    if(!strstr(buf,"ensemble energies")) fileerror(filename, f);
+
+    do {
+	lastu = u;
+	u++;
+	while(fgets(buf,nbuf,f) && !strstr(buf,"BEEFens")) u++;
+    } while(strstr(buf,"ensemble energies"));
+    
+    if(fseek(f,0,SEEK_SET)) fileerror(filename, f);
+    
+    for(u=0;u<lastu;u++) fgets(buf,nbuf,f);
+    
+    return f;
+}
+
 
 int main(int argc, char **argv)
 {
@@ -32,10 +59,7 @@ int main(int argc, char **argv)
 	return 1;
     }
 
-    dftout = fopen(argv[2], "r");
-    if(!dftout) openerror(argv[2]);
-    while(fgets(buf,nbuf,dftout) && !strstr(buf,"BEEFens"));
-    if(!strstr(buf,"ensemble energies")) fileerror(argv[2], dftout);
+    dftout = openandfindlastbeefens(argv[2], buf);
     nsamples = strtol(strstr(buf,"BEEFens")+7, NULL, 10);
 
     samples = (double *) malloc(nsamples*sizeof(double));
@@ -56,9 +80,7 @@ int main(int argc, char **argv)
     for(int i=3;i<argc;i+=2)
     {
 	d = strtod(argv[i], NULL);
-	dftout = fopen(argv[i+1], "r");
-	if(!dftout) openerror(argv[i+1]);
-	while(fgets(buf,nbuf,dftout) && !strstr(buf,"BEEFens"));
+	dftout = openandfindlastbeefens(argv[i+1], buf);
 	for(int j=0;j<nsamples;j++)
 	{
 	    if(!fgets(buf,nbuf,dftout)) fileerror(argv[i+1], dftout);
@@ -74,7 +96,7 @@ int main(int argc, char **argv)
     for(int i=1;i<nsamples;i++) e += pow(samples[i]-d, 2);
     free(samples);
 
-    printf("%.4g standard deviation\n", sqrt(e));
+    printf("%.5g standard deviation\n", sqrt(e));
 
     return 0;
 }
