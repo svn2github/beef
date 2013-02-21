@@ -1,0 +1,20 @@
+AC_INIT(libbeef, 0.1.0, vossj@slac.stanford.edu)
+
+PACKAGE=libbeef
+VERSION=0.1.0
+
+AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
+
+AC_PROG_CC
+AX_COMPILER_VENDOR
+AX_CC_MAXOPT
+AX_CHECK_COMPILE_FLAG(-std=c99, CFLAGS="$CFLAGS -std=c99")
+AX_CHECK_COMPILE_FLAG(-no-prec-div -xHost, CFLAGS="$CFLAGS -no-prec-div -xHost")
+
+AC_HEADER_STDC
+
+AC_PROG_RANLIB
+AC_PROG_INSTALL
+
+
+AC_OUTPUT(Makefile src/Makefile)
