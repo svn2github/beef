@@ -96,7 +96,7 @@ int main(int argc, char **argv)
     for(int i=1;i<nsamples;i++) e += pow(samples[i]-d, 2);
     free(samples);
 
-    printf("%.5g standard deviation\n", sqrt(e));
+    printf("%.5g standard deviation\n", sqrt(e/nsamples));
 
     return 0;
 }
