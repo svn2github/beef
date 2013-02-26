@@ -101,18 +101,9 @@ void beeflocalcorr_(double *r, double *g, double *e, double *dr, double *dg, int
     }
     else
     {
-	if(!(*addlda))
-	{
-	    *e = (pbec-ldac)*(*r);
-	    *dr = pbedr-ldadr;
-	    *dg = pbed2rho / (*r);
-	}
-	else
-	{
-	    *e = pbec*(*r);
-	    *dr = pbedr;
-	    *dg = pbed2rho / (*r);
-	}
+	*e = pbec*(*r);
+	*dr = pbedr;
+	*dg = pbed2rho / (*r);
     }
 }
 
@@ -173,12 +164,7 @@ void beeflocalcorrpot_(double *r, double *g, double *e, int *addlda)
     if(beeforder==-2)
 	*e = 0.;
     else
-    {
-	if(!(*addlda))
-	    *e = (pbec-ldac)*(*r);
-	else
-	    *e = pbec*(*r);
-    }
+	*e = pbec*(*r);
 }
 
 
@@ -229,18 +215,9 @@ void beeflocalcorrspin_(double *r, double *z, double *g, double *e,
     }
     else
     {
-	if(!(*addlda))
-	{
-	    *e = (pbec-ldac)*(*r);
-	    *drup = pbedrup-ldadrup;
-	    *drdown = pbedrdown-ldadrdown;
-	}
-	else
-	{
-	    *e = pbec*(*r);
-	    *drup = pbedrup;
-	    *drdown = pbedrdown;
-	}
+	*e = pbec*(*r);
+	*drup = pbedrup;
+	*drdown = pbedrdown;
 	*dg = pbed2rho / (*r);
     }
 }
@@ -273,20 +250,15 @@ void beeflocalcorrpotspin_(double *r, double *z, double *g, double *e, int *addl
     if(beeforder==-2)
 	*e = 0.;
     else
-    {
-	if(!(*addlda))
-	    *e = (pbec-ldac)*(*r);
-	else
-	    *e = pbec*(*r);
-    }
+	*e = pbec*(*r);
 }
 
 
 
 // mode >= 0: for perturbed parameters --- calc Legendre order mode only
 // -1: standard beefxc expansion coefficients
-// -2: no exchange, LDA correlation only
-// else: no exchange, PBE correlation (without LDA contribution)
+// -2: no exchange, LDA exchange and correlation only
+// else: no exchange, PBE without PBE exchange enhancement
 void beefsetmode_(int *mode)
 {
     beeforder = *mode;
