@@ -234,7 +234,7 @@
     gcor2(c_b9, c_b10, c_b11, c_b12, c_b13, c_b14, rtrs, &ep, &eprs);
     gcor2(c_b15, c_b16, c_b17, c_b18, c_b19, c_b20, rtrs, &alfm, &alfrsm);
 /* Computing 4th power */
-    z4 = pow(zet, 4);
+    z4 = zet*zet*zet*zet;
     f = (pow(1.+zet,4./3.)+pow(1.-zet,4./3.)-2.)/GAM;
     *ec = eu*(1.-f*z4) + ep*f*z4 - alfm*f*(1.-z4)/fzz;
 /* ---------------------------------------------------------------------- */

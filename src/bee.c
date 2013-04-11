@@ -5,6 +5,7 @@
 
 #define nbuf 65536
 
+static inline double sq(double x) {return x*x;}
 
 void fileerror(const char *filename, FILE *file)
 {
@@ -92,8 +93,8 @@ int main(int argc, char **argv)
     d = samples[0];
     for(int i=1;i<nsamples;i++) d += samples[i];
     d /= (double) nsamples;
-    e = pow(samples[0]-d, 2);
-    for(int i=1;i<nsamples;i++) e += pow(samples[i]-d, 2);
+    e = sq(samples[0]-d);
+    for(int i=1;i<nsamples;i++) e += sq(samples[i]-d);
     free(samples);
 
     printf("%.5g standard deviation\n", sqrt(e/nsamples));

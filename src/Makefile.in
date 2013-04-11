@@ -39,12 +39,7 @@ bin_PROGRAMS = bee$(EXEEXT)
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/../beefm4/ax_cc_maxopt.m4 \
-	$(top_srcdir)/../beefm4/ax_check_compile_flag.m4 \
-	$(top_srcdir)/../beefm4/ax_compiler_vendor.m4 \
-	$(top_srcdir)/../beefm4/ax_gcc_archflag.m4 \
-	$(top_srcdir)/../beefm4/ax_gcc_x86_cpuid.m4 \
-	$(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d

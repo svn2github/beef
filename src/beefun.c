@@ -1,6 +1,7 @@
 #define _XOPEN_SOURCE 500
 
 #include <math.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -16,6 +17,8 @@ void beefx_(double *r, double *g, double *e, double *dr, double *dg, int *addlda
     const int i1=1;
     const int i2=1;
 
+    switch(beeftype) {
+    case 0: //BEEF-vdW xc    
     r43 = pow(*r, 4./3.);
     r83 = r43*r43;
     sx = r2e * r43;
@@ -35,7 +38,7 @@ void beefx_(double *r, double *g, double *e, double *dr, double *dg, int *addlda
 	    fx = ddot_(&n, mi, &i1, L, &i2);
 	dl = ddot_(&n, mi, &i1, dL, &i2);
 	
-	dfx = dl*( 4.*s / (4.+s2) - 4.*s2*s/pow((4.+s2), 2) );
+	dfx = dl*( 4.*s / (4.+s2) - 4.*s2*s/sq(4.+s2) );
 	*dr = dx*fx - 4./3.*s2/(s*(*r))*sx*dfx;
 	*dg = sx*dfx*pix/(s*r83);
 	*e = sx*fx;
@@ -46,7 +49,7 @@ void beefx_(double *r, double *g, double *e, double *dr, double *dg, int *addlda
     {
 	(*LdLn[beeforder])(t, &fx, &dl);
 
-	dfx = dl*( 4.*s / (4.+s2) - 4.*s2*s/pow((4.+s2), 2) );
+	dfx = dl*( 4.*s / (4.+s2) - 4.*s2*s/sq(4.+s2) );
 	*dr = dx*fx - 4./3.*s2/(s*(*r))*sx*dfx;
 	*dg = sx*dfx*pix/(s*r83);
 	*e = sx*fx;
@@ -56,6 +59,9 @@ void beefx_(double *r, double *g, double *e, double *dr, double *dg, int *addlda
 	*dr = 0.;
 	*dg = 0.;
 	*e = 0.;
+    }
+    
+    break;
     }
 }
 
@@ -73,6 +79,8 @@ void beeflocalcorr_(double *r, double *g, double *e, double *dr, double *dg, int
 	return;
     }
     
+    switch(beeftype) {
+    case 0: //BEEF-vdW xc    
     rs = invpi075tothird / pow(*r,1./3.);
     corpbe(rs, 0.5/r2k * sqrt(*g*rs) / (*r),
 	(beeforder!=-2), 1, &ldac, &ldadr, &pbec, &pbedr, &pbed2rho);
@@ -105,6 +113,9 @@ void beeflocalcorr_(double *r, double *g, double *e, double *dr, double *dg, int
 	*dr = pbedr;
 	*dg = pbed2rho / (*r);
     }
+    
+    break;
+    }
 }
 
 // evaluate bee exchange energy only
@@ -115,6 +126,8 @@ void beefxpot_(double *r, double *g, double *e, int *addlda)
     const int i1=1;
     const int i2=1;
 
+    switch(beeftype) {
+    case 0: //BEEF-vdW xc    
     r43 = pow(*r, 4./3.);
 
     s2 = *g*pix / (r43*r43);
@@ -135,6 +148,9 @@ void beefxpot_(double *r, double *g, double *e, int *addlda)
 	*e = (*Ln[beeforder])(t) * r2e * r43;
     else
 	*e = 0.;
+
+    break;
+    }
 }
 
 // evaluate local part of bee correlation - energy only
@@ -148,6 +164,8 @@ void beeflocalcorrpot_(double *r, double *g, double *e, int *addlda)
 	return;
     }
     
+    switch(beeftype) {
+    case 0: //BEEF-vdW xc    
     rs = invpi075tothird / pow(*r,1./3.);
     corpbe(rs, 0.5/r2k * sqrt(*g*rs) / (*r),
 	(beeforder!=-2), 0, &ldac, &ldadr, &pbec, &pbedr, &pbed2rho);
@@ -165,6 +183,9 @@ void beeflocalcorrpot_(double *r, double *g, double *e, int *addlda)
 	*e = 0.;
     else
 	*e = pbec*(*r);
+
+    break;
+    }
 }
 
 
@@ -183,6 +204,8 @@ void beeflocalcorrspin_(double *r, double *z, double *g, double *e,
 	return;
     }
     
+    switch(beeftype) {
+    case 0: //BEEF-vdW xc    
     rs = invpi075tothird / pow(*r,1./3.);
     corpbespin(rs, 0.5/r2k * sqrt(*g*rs) / (*r), *z,
 	(beeforder!=-2), 1, &ldac, &ldadrup, &ldadrdown, &pbec,
@@ -220,6 +243,9 @@ void beeflocalcorrspin_(double *r, double *z, double *g, double *e,
 	*drdown = pbedrdown;
 	*dg = pbed2rho / (*r);
     }
+    
+    break;
+    }
 }
 
 // evaluate local part of bee correlation for spin polarized system - energy only
@@ -232,7 +258,9 @@ void beeflocalcorrpotspin_(double *r, double *z, double *g, double *e, int *addl
 	*e = 0.;
 	return;
     }
-    
+
+    switch(beeftype) {
+    case 0: //BEEF-vdW xc    
     rs = invpi075tothird / pow(*r,1./3.);
     corpbespin(rs, 0.5/r2k * sqrt(*g*rs) / (*r), *z,
 	(beeforder!=-2), 0, &ldac, &ldadrup, &ldadrdown, &pbec,
@@ -251,6 +279,9 @@ void beeflocalcorrpotspin_(double *r, double *z, double *g, double *e, int *addl
 	*e = 0.;
     else
 	*e = pbec*(*r);
+
+    break;
+    }
 }
 
 
@@ -297,4 +328,34 @@ void beefensemble_(double *beefxc, double *ensemble)
 	vec[nmax+1] = -vec[nmax];
 	ensemble[i] = ddot_(&n2, vec, &ix, beefxc, &iy);
     }
+}
+
+
+//set type of beef functional to be used
+//returns true on success
+//0: BEEF-vdW
+int beef_set_type_(int *tbeef, int *ionode)
+{
+    beeftype = *tbeef;
+    
+    if(*ionode)
+    {
+	puts("\n" output_spacing output_marker);
+	printf(output_spacing "Initializing " PACKAGE " V" VERSION " ");
+	
+	switch(beeftype) {
+	case 0:
+	    puts("with the BEEF-vdW functional.");
+	    puts(output_spacing "Citation: Wellendorff et al., PRB 85, 235149 (2012).");
+	    break;
+
+	default:
+	    return 0;
+	}
+	
+	puts(output_spacing output_marker "\n");
+	fflush(stdout);
+    }
+    
+    return 1;
 }

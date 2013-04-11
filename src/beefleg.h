@@ -586,4 +586,14 @@ static int beeforder = -1;
 static double L[nmax] = {1.};
 static double dL[nmax] = {0.,1.};
 
+
+static inline double sq(double x) {return x*x;}
+
+// beeftype is a switch set by beef_set_type
+// which determines which version/type of beef is used
+static int beeftype = 0;
+
+#define output_spacing "     "
+#define output_marker "**************************************************************************"
+
 #endif
