@@ -83,7 +83,7 @@ void beeflocalcorr_(double *r, double *g, double *e, double *dr, double *dg, int
     case 0: //BEEF-vdW xc    
     rs = invpi075tothird / pow(*r,1./3.);
     corpbe(rs, 0.5/r2k * sqrt(*g*rs) / (*r),
-	(beeforder!=-2), 1, &ldac, &ldadr, &pbec, &pbedr, &pbed2rho);
+	(beeforder>-3), 1, &ldac, &ldadr, &pbec, &pbedr, &pbed2rho);
 
     if(beeforder==-1)
     {
@@ -103,15 +103,21 @@ void beeflocalcorr_(double *r, double *g, double *e, double *dr, double *dg, int
     
     if(beeforder==-2)
     {
-	*e = 0.;
-	*dr = 0.;
+	*e = pbec*(*r);
+	*dr = pbedr;
+	*dg = pbed2rho / (*r);
+    }
+    else if(beeforder==-3)
+    {
+	*e = ldac*(*r);
+	*dr = ldadr;
 	*dg = 0.;
     }
     else
     {
-	*e = pbec*(*r);
-	*dr = pbedr;
-	*dg = pbed2rho / (*r);
+	*e = 0.;
+	*dr = 0.;
+	*dg = 0.;
     }
     
     break;
@@ -168,7 +174,7 @@ void beeflocalcorrpot_(double *r, double *g, double *e, int *addlda)
     case 0: //BEEF-vdW xc    
     rs = invpi075tothird / pow(*r,1./3.);
     corpbe(rs, 0.5/r2k * sqrt(*g*rs) / (*r),
-	(beeforder!=-2), 0, &ldac, &ldadr, &pbec, &pbedr, &pbed2rho);
+	(beeforder>-3), 0, &ldac, &ldadr, &pbec, &pbedr, &pbed2rho);
 
     if(beeforder==-1)
     {
@@ -180,9 +186,11 @@ void beeflocalcorrpot_(double *r, double *g, double *e, int *addlda)
     }
     
     if(beeforder==-2)
-	*e = 0.;
-    else
 	*e = pbec*(*r);
+    else if(beeforder==-3)
+	*e = ldac*(*r);
+    else
+	*e = 0.;
 
     break;
     }
@@ -231,17 +239,24 @@ void beeflocalcorrspin_(double *r, double *z, double *g, double *e,
     
     if(beeforder==-2)
     {
-	*e = 0.;
-	*drup = 0.;
-	*drdown = 0.;
-	*dg = 0.;
-    }
-    else
-    {
 	*e = pbec*(*r);
 	*drup = pbedrup;
 	*drdown = pbedrdown;
 	*dg = pbed2rho / (*r);
+    }
+    else if(beeforder==-3)
+    {
+	*e = ldac*(*r);
+	*drup = ldadrup;
+	*drdown = ldadrdown;
+	*dg = 0.;
+    }
+    else
+    {
+	*e = 0.;
+	*drup = 0.;
+	*drdown = 0.;
+	*dg = 0.;
     }
     
     break;
@@ -276,9 +291,11 @@ void beeflocalcorrpotspin_(double *r, double *z, double *g, double *e, int *addl
     }
     
     if(beeforder==-2)
-	*e = 0.;
-    else
 	*e = pbec*(*r);
+    else if(beeforder==-3)
+	*e = ldac*(*r);
+    else
+	*e = 0.;
 
     break;
     }
@@ -287,9 +304,10 @@ void beeflocalcorrpotspin_(double *r, double *z, double *g, double *e, int *addl
 
 
 // mode >= 0: for perturbed parameters --- calc Legendre order mode only
-// -1: standard beefxc expansion coefficients
-// -2: no exchange, LDA exchange and correlation only
-// else: no exchange, PBE without PBE exchange enhancement
+// -1:        standard beefxc expansion coefficients
+// -2:        PBE correlation only
+// -3:        LDA correlation only
+// else:      no correlation either
 void beefsetmode_(int *mode)
 {
     beeforder = *mode;
