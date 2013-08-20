@@ -216,7 +216,7 @@ void beeflocalcorrspin_(double *r, double *z, double *g, double *e,
     case 0: //BEEF-vdW xc    
     rs = invpi075tothird / pow(*r,1./3.);
     corpbespin(rs, 0.5/r2k * sqrt(*g*rs) / (*r), *z,
-	(beeforder!=-2), 1, &ldac, &ldadrup, &ldadrdown, &pbec,
+	(beeforder>-3), 1, &ldac, &ldadrup, &ldadrdown, &pbec,
 	&pbedrup, &pbedrdown, &pbed2rho);
 
     if(beeforder==-1)
@@ -278,7 +278,7 @@ void beeflocalcorrpotspin_(double *r, double *z, double *g, double *e, int *addl
     case 0: //BEEF-vdW xc    
     rs = invpi075tothird / pow(*r,1./3.);
     corpbespin(rs, 0.5/r2k * sqrt(*g*rs) / (*r), *z,
-	(beeforder!=-2), 0, &ldac, &ldadrup, &ldadrdown, &pbec,
+	(beeforder>-3), 0, &ldac, &ldadrup, &ldadrdown, &pbec,
 	&pbedrup, &pbedrdown, &pbed2rho);
 
     if(beeforder==-1)
