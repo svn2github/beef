@@ -1,7 +1,7 @@
-AC_INIT(libbeef, 0.1.0, vossj@slac.stanford.edu)
+AC_INIT(libbeef, 0.1.1, vossj@slac.stanford.edu)
 
 PACKAGE=libbeef
-VERSION=0.1.0
+VERSION=0.1.1
 
 AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
 
