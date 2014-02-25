@@ -580,18 +580,18 @@ static void(*LdLn[])(double,double *,double *) = {
 
 // beeforder==-1 : calculate beefxc with standard expansion coefficients
 // (is changed by beefsetmode_)
-static int beeforder = -1;
+static __thread int beeforder = -1;
 
 //arrays holding current Legendre polynomials and derivatives
-static double L[nmax] = {1.};
-static double dL[nmax] = {0.,1.};
+static __thread double L[nmax] = {1.};
+static __thread double dL[nmax] = {0.,1.};
 
 
 static inline double sq(double x) {return x*x;}
 
 // beeftype is a switch set by beef_set_type
 // which determines which version/type of beef is used
-static int beeftype = 0;
+static __thread int beeftype = 0;
 
 #define output_spacing "     "
 #define output_marker "**************************************************************************"
