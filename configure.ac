@@ -1,7 +1,7 @@
-AC_INIT(libbeef, 0.1.1, vossj@slac.stanford.edu)
+AC_INIT(libbeef, 0.1.2, vossj@slac.stanford.edu)
 
 PACKAGE=libbeef
-VERSION=0.1.1
+VERSION=0.1.2
 
 AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
 
@@ -18,3 +18,7 @@ AC_PROG_INSTALL
 
 
 AC_OUTPUT(Makefile src/Makefile)
+
+touch aclocal.m4
+touch Makefile.in
+touch configure
