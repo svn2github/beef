@@ -22,3 +22,5 @@ AC_OUTPUT(Makefile src/Makefile)
 touch aclocal.m4
 touch Makefile.in
 touch configure
+touch config.sub
+touch config.status
